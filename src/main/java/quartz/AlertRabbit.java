@@ -3,9 +3,9 @@ package quartz;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.*;
@@ -39,27 +39,12 @@ public class AlertRabbit {
                     .withSchedule(times)
                     .build();
             scheduler.scheduleJob(job, trigger);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             scheduler.shutdown();
         } catch (Exception se) {
             se.printStackTrace();
         }
     }
-
-/**    private static Properties init() throws IOException {
-        Properties config;
-        try (InputStream in = AlertRabbit.class
-                .getClassLoader()
-                .getResourceAsStream("rabbit.properties")) {
-            config = new Properties();
-            config.load(in);
-        }
-        return config;
-    }
-
-    private static int getIntervalFromProperties() throws IOException {
-        return Integer.parseInt(init().getProperty("rabbit.interval"));
-    } */
 
     public static class Rabbit implements Job {
 
@@ -67,7 +52,7 @@ public class AlertRabbit {
         public void execute(JobExecutionContext context) {
             Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connect");
             try (PreparedStatement statement = connection.prepareStatement("insert into rabbit (created_date) values (?)")) {
-                statement.setTimestamp(1, Timestamp.valueOf(String.valueOf(System.currentTimeMillis())));
+                statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
                 statement.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
