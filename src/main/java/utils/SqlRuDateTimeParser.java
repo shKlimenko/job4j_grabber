@@ -2,7 +2,6 @@ package utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
@@ -24,7 +23,7 @@ public class SqlRuDateTimeParser implements DateTimeParser {
 
     public static void main(String[] args) {
         SqlRuDateTimeParser srdtp = new SqlRuDateTimeParser();
-        System.out.println(srdtp.parse("15 дек 22, 22:15"));
+        System.out.println(srdtp.parse("сегодня, 22:15"));
     }
 
     @Override
@@ -32,9 +31,9 @@ public class SqlRuDateTimeParser implements DateTimeParser {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy, HH:mm");
         LocalDateTime date;
         if (parse.toLowerCase().contains("сегодня")) {
-            date = LocalDateTime.now().withNano(0);
+            date = LocalDateTime.now().withSecond(0).withNano(0);
         } else if (parse.toLowerCase().contains("вчера")) {
-            date = LocalDateTime.now().minusDays(1).withNano(0);
+            date = LocalDateTime.now().minusDays(1).withSecond(0).withNano(0);
         } else {
             String[] strings = parse.split(" ");
             parse = parse.replace(strings[1], MONTHS.get(strings[1]));
