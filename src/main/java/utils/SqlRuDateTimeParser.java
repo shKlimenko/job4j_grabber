@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
+    private static final String YESTERDAY = "вчера";
+    private static final String TODAY = "сегодня";
 
     private static final Map<String, String> MONTHS = Map.ofEntries(
             Map.entry("янв", "01"),
@@ -22,29 +24,25 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             Map.entry("дек", "12")
     );
 
+    private LocalDateTime parseAndSplitString(String parse) {
+        String[] parseSplitByComma = parse.split(", ");
+        String[] timeSplitByColon = parseSplitByComma[1].split(":");
+        int hours = Integer.parseInt(timeSplitByColon[0]);
+        int minutes = Integer.parseInt(timeSplitByColon[1]);
+        return LocalDateTime.now()
+                .withSecond(0)
+                .withNano(0)
+                .with(LocalTime.of(hours, minutes));
+    }
+
     @Override
     public LocalDateTime parse(String parse) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy, HH:mm");
         LocalDateTime date;
-        if (parse.toLowerCase().contains("сегодня")) {
-            String[] parseSplitByComma = parse.split(", ");
-            String[] timeSplitByColon = parseSplitByComma[1].split(":");
-            date = LocalDateTime.now()
-                    .withSecond(0)
-                    .withNano(0)
-                    .with(LocalTime.of(
-                            Integer.parseInt(timeSplitByColon[0]),
-                            Integer.parseInt(timeSplitByColon[1])));
-        } else if (parse.toLowerCase().contains("вчера")) {
-            String[] parseSplitByComma = parse.split(", ");
-            String[] timeSplitByColon = parseSplitByComma[1].split(":");
-            date = LocalDateTime.now()
-                    .minusDays(1)
-                    .withSecond(0)
-                    .withNano(0)
-                    .with(LocalTime.of(
-                            Integer.parseInt(timeSplitByColon[0]),
-                            Integer.parseInt(timeSplitByColon[1])));
+        if (parse.toLowerCase().contains(TODAY)) {
+            date = parseAndSplitString(parse);
+        } else if (parse.toLowerCase().contains(YESTERDAY)) {
+            date = parseAndSplitString(parse).minusDays(1);
         } else {
             String[] strings = parse.split(" ");
             parse = parse.replace(strings[1], MONTHS.get(strings[1]));
