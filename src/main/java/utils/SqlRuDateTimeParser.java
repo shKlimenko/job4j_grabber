@@ -1,6 +1,7 @@
 package utils;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
@@ -21,19 +22,29 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             Map.entry("дек", "12")
     );
 
-    public static void main(String[] args) {
-        SqlRuDateTimeParser srdtp = new SqlRuDateTimeParser();
-        System.out.println(srdtp.parse("сегодня, 22:15"));
-    }
-
     @Override
     public LocalDateTime parse(String parse) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy, HH:mm");
         LocalDateTime date;
         if (parse.toLowerCase().contains("сегодня")) {
-            date = LocalDateTime.now().withSecond(0).withNano(0);
+            String[] parseSplitByComma = parse.split(", ");
+            String[] timeSplitByColon = parseSplitByComma[1].split(":");
+            date = LocalDateTime.now()
+                    .withSecond(0)
+                    .withNano(0)
+                    .with(LocalTime.of(
+                            Integer.parseInt(timeSplitByColon[0]),
+                            Integer.parseInt(timeSplitByColon[1])));
         } else if (parse.toLowerCase().contains("вчера")) {
-            date = LocalDateTime.now().minusDays(1).withSecond(0).withNano(0);
+            String[] parseSplitByComma = parse.split(", ");
+            String[] timeSplitByColon = parseSplitByComma[1].split(":");
+            date = LocalDateTime.now()
+                    .minusDays(1)
+                    .withSecond(0)
+                    .withNano(0)
+                    .with(LocalTime.of(
+                            Integer.parseInt(timeSplitByColon[0]),
+                            Integer.parseInt(timeSplitByColon[1])));
         } else {
             String[] strings = parse.split(" ");
             parse = parse.replace(strings[1], MONTHS.get(strings[1]));
