@@ -37,7 +37,7 @@ public class SqlRuDateTimeParser implements DateTimeParser {
 
     @Override
     public LocalDateTime parse(String parse) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy, HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MM yy, HH:mm");
         LocalDateTime date;
         if (parse.toLowerCase().contains(TODAY)) {
             date = parseAndSplitString(parse);

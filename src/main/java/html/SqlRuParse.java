@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import post.Post;
 import utils.DateTimeParser;
-import utils.SqlRuDateTimeParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,23 +16,6 @@ public class SqlRuParse implements Parse {
 
     public SqlRuParse(DateTimeParser dateTimeParser) {
         this.dateTimeParser = dateTimeParser;
-    }
-
-    public static void main(String[] args) throws Exception {
-//        for (int i = 1; i < 6; i++) {
-//            Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers/" + i).get();
-//            Elements row = doc.select(".postslisttopic");
-//            for (Element td : row) {
-//                Element parent = td.parent();
-//                Element href = td.child(0);
-//                System.out.println(href.attr("href"));
-//                System.out.println(href.text());
-//                System.out.println(parent.child(5).text());
-//            }
-//        }
-        SqlRuParse parse = new SqlRuParse(new SqlRuDateTimeParser());
-        List<Post> lst = parse.list("https://www.sql.ru/forum/job-offers/");
-        System.out.println(lst);
     }
 
     @Override
