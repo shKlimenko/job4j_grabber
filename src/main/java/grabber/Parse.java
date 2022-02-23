@@ -1,6 +1,4 @@
-package html;
-
-import post.Post;
+package grabber;
 
 import java.util.List;
 
