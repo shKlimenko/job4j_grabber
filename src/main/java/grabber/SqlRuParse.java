@@ -22,12 +22,12 @@ public class SqlRuParse implements Parse {
         for (int i = 1; i < 6; i++) {
             try {
                 Document doc = Jsoup.connect(link + i).get();
-
                 Elements row = doc.select(".postslisttopic");
                 for (Element td : row) {
                     Element parent = td.parent();
                     Element href = td.child(0);
-                    if (href.text().toLowerCase().contains("java")) {
+                    if (href.text().toLowerCase().contains("java")
+                            && !href.text().toLowerCase().contains("javascript")) {
                         list.add(detail(href.attr("href")));
                     }
                 }
