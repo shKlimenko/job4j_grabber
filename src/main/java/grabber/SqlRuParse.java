@@ -38,7 +38,6 @@ public class SqlRuParse implements Parse {
         return list;
     }
 
-    @Override
     public Post detail(String link) {
         Post post = null;
         try {

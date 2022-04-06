@@ -1,15 +1,15 @@
 package grabber;
 
-import com.mchange.v2.lang.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HabrCareerParse implements Parse {
@@ -24,25 +24,38 @@ public class HabrCareerParse implements Parse {
         this.dateTimeParser = dateTimeParser;
     }
 
-    public static void main(String[] args) throws IOException {
-        for (int i = 1; i < 6; i++) {
-            Connection connection = Jsoup.connect(PAGE_LINK + "?page=" + i);
-            Document document = connection.get();
-            Elements rows = document.select(".vacancy-card__inner");
-            rows.forEach(row -> {
-                Element titleElement = row.select(".vacancy-card__title").first();
-                Element basicDate = row.select(".basic-date").first();
-                Element linkElement = titleElement.child(0);
-                String vacancyName = titleElement.text();
-                String dateTimeAttr = basicDate.attr("datetime");
-                String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-                System.out.printf("%s %s %s%n", vacancyName, link, dateTimeAttr);
-            });
-        }
+    public static void main(String[] args) {
+        HabrCareerParse hcp = new HabrCareerParse(new HabrCareerDateTimeParser());
+        List<Post> lst = hcp.list("https://career.habr.com/vacancies/java_developer");
+        lst.forEach(System.out::println);
     }
 
     @Override
     public List<Post> list(String link) {
-        return null;
+        List<Post> list = new ArrayList<>();
+        HabrPageParse hpp = new HabrPageParse();
+        for (int i = 1; i < 6; i++) {
+            try {
+                Document doc = Jsoup.connect(link + "?page=" + i).get();
+                Elements rows = doc.select(".vacancy-card__inner");
+
+                rows.forEach(row -> {
+                    Element titleElement = row.select(".vacancy-card__title").first();
+                    Element basicDate = row.select(".basic-date").first();
+                    Element linkElement = titleElement.child(0);
+                    String vacancyName = titleElement.text();
+                    String dateTimeAttr = basicDate.attr("datetime");
+                    String sLink = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+                    try {
+                        list.add(new Post(vacancyName, sLink, hpp.retrieveDescription(sLink), this.dateTimeParser.parse(dateTimeAttr)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 }
