@@ -4,6 +4,8 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.*;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.newJob;
@@ -13,8 +15,8 @@ import static org.quartz.TriggerBuilder.newTrigger;
 public class Grabber implements Grab {
     private final Properties cfg = new Properties();
 
-    public Store store() {
-        return null;
+    public Store store() throws SQLException {
+        return new PsqlStore(cfg);
     }
 
     public Scheduler scheduler() throws SchedulerException {
@@ -24,7 +26,9 @@ public class Grabber implements Grab {
     }
 
     public void cfg() throws IOException {
-        try (InputStream in = new FileInputStream(new File("app.properties"))) {
+        try (InputStream in = Grabber.class
+                .getClassLoader()
+                .getResourceAsStream("jdbc.properties")) {
             cfg.load(in);
         }
     }
@@ -38,7 +42,7 @@ public class Grabber implements Grab {
                 .usingJobData(data)
                 .build();
         SimpleScheduleBuilder times = simpleSchedule()
-                .withIntervalInSeconds(Integer.parseInt(cfg.getProperty("time")))
+                .withIntervalInSeconds(Integer.parseInt(cfg.getProperty("jdbc.time")))
                 .repeatForever();
         Trigger trigger = newTrigger()
                 .startNow()
@@ -54,7 +58,10 @@ public class Grabber implements Grab {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
-            /* TODO impl logic */
+            List<Post> posts = parse.list("https://career.habr.com/vacancies/java_developer");
+            for (Post post : posts) {
+                store.save(post);
+            }
         }
     }
 
