@@ -5,7 +5,11 @@ import java.nio.file.Paths;
 
 public class Emulator {
     public static void main(String[] args) {
-        DirFileCache dirFileCache = checkDir("C:/projects/cache/");
+        DirFileCache dirFileCache = checkDir(".\\src\\main\\java\\gc\\cache\\");
+        dirFileCache.put("some_cache", "Some value for some cache");
+        System.out.println(dirFileCache.get("some_cache"));
+        System.out.println(dirFileCache.get("Names.txt"));
+        System.out.println(dirFileCache.get("Address.txt"));
     }
 
     private static DirFileCache checkDir(String cachingDir) {
@@ -17,13 +21,5 @@ public class Emulator {
             throw new IllegalArgumentException("Not exist");
         }
         return new DirFileCache(cachingDir);
-    }
-
-    public static void putCache(DirFileCache dirFileCache, String key, String value) {
-        dirFileCache.put(key, value);
-    }
-
-    public static String loadCache(DirFileCache dirFileCache, String key) {
-        return dirFileCache.get(key);
     }
 }
