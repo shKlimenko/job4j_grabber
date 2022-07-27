@@ -2,14 +2,19 @@ package gc.cache;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class Emulator {
     public static void main(String[] args) {
-        DirFileCache dirFileCache = checkDir(".\\src\\main\\java\\gc\\cache\\");
-        dirFileCache.put("some_cache", "Some value for some cache");
-        System.out.println(dirFileCache.get("some_cache"));
-        System.out.println(dirFileCache.get("Names.txt"));
-        System.out.println(dirFileCache.get("Address.txt"));
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите желаемую директорию:");
+        String cachingDir = scanner.nextLine();
+        DirFileCache dirFileCache = checkDir(cachingDir);
+
+        System.out.println("Введите имя файла:");
+        String fileName = scanner.nextLine();
+        System.out.println(dirFileCache.get(fileName));
+
     }
 
     private static DirFileCache checkDir(String cachingDir) {
