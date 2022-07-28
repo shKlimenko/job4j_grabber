@@ -5,16 +5,49 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Emulator {
+    private static DirFileCache dirFileCache;
+
+    public static final Integer SELECT_FOLDER = 1;
+    public static final Integer LOAD_FILE = 2;
+    public static final Integer GET_FILE = 3;
+
+    public static final String SELECT = "Выберите меню:";
+    public static final String MENU = """ 
+                Введите 1, чтобы указать директорию.
+                Введите 2, чтобы загрузить файл.
+                Введите 3, чтобы получить файл.
+                Введите 4 или любое другое число для выхода.
+            """;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите желаемую директорию:");
-        String cachingDir = scanner.nextLine();
-        DirFileCache dirFileCache = checkDir(cachingDir);
+        start(scanner);
+    }
 
-        System.out.println("Введите имя файла:");
-        String fileName = scanner.nextLine();
-        System.out.println(dirFileCache.get(fileName));
-
+    private static void start(Scanner scanner) {
+        boolean run = true;
+        while (run) {
+            System.out.println(MENU);
+            System.out.println(SELECT);
+            int userChoice = Integer.parseInt(scanner.nextLine());
+            if (SELECT_FOLDER == userChoice) {
+                System.out.println("Введите желаемую директорию:");
+                String cachingDir = scanner.nextLine();
+                dirFileCache = checkDir(cachingDir);
+            } else if (LOAD_FILE == userChoice) {
+                System.out.println("Введите имя файла, который хотите загрузить:");
+                String fileName = scanner.nextLine();
+                dirFileCache.load(fileName);
+                System.out.println("Файл загружен");
+            } else if (GET_FILE == userChoice) {
+                System.out.println("Введите имя файла, который хотите получить:");
+                String fileName = scanner.nextLine();
+                System.out.println(dirFileCache.get(fileName));
+            }  else {
+                run = false;
+                System.out.println("---ВЫХОД---");
+            }
+        }
     }
 
     private static DirFileCache checkDir(String cachingDir) {
