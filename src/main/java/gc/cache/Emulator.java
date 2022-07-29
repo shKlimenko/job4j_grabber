@@ -7,9 +7,9 @@ import java.util.Scanner;
 public class Emulator {
     private static DirFileCache dirFileCache;
 
-    public static final Integer SELECT_FOLDER = 1;
-    public static final Integer LOAD_FILE = 2;
-    public static final Integer GET_FILE = 3;
+    public static final int SELECT_FOLDER = 1;
+    public static final int LOAD_FILE = 2;
+    public static final int GET_FILE = 3;
 
     public static final String SELECT = "Выберите меню:";
     public static final String MENU = """ 
@@ -37,7 +37,7 @@ public class Emulator {
             } else if (LOAD_FILE == userChoice) {
                 System.out.println("Введите имя файла, который хотите загрузить:");
                 String fileName = scanner.nextLine();
-                dirFileCache.load(fileName);
+                dirFileCache.get(fileName);
                 System.out.println("Файл загружен");
             } else if (GET_FILE == userChoice) {
                 System.out.println("Введите имя файла, который хотите получить:");
