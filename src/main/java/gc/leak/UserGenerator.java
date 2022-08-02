@@ -28,10 +28,13 @@ public class UserGenerator implements Generate {
     public void generate() {
         users.clear();
         for (int i = 0; i < NEW_USERS; i++) {
-            users.add(new User(
-                    surnames.get(random.nextInt(surnames.size())) + SEPARATOR
-                            + names.get(random.nextInt(names.size())) + SEPARATOR
-                            + patrons.get(random.nextInt(patrons.size()))));
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(surnames.get(random.nextInt(surnames.size())));
+            stringBuilder.append(SEPARATOR);
+            stringBuilder.append(names.get(random.nextInt(names.size())));
+            stringBuilder.append(SEPARATOR);
+            stringBuilder.append(patrons.get(random.nextInt(patrons.size())));
+            users.add(new User(stringBuilder.toString()));
         }
     }
 
