@@ -9,14 +9,14 @@ public class UserGenerator implements Generate {
     public static final String PATH_NAMES = "src/main/java/gc/leak/files/names.txt";
     public static final String PATH_SURNAMES = "src/main/java/gc/leak/files/surnames.txt";
     public static final String PATH_PATRONS = "src/main/java/gc/leak/files/patr.txt";
-
     public static final String SEPARATOR = " ";
     public static final int NEW_USERS = 1000;
 
     public List<String> names;
     public List<String> surnames;
     public List<String> patrons;
-    private static List<User> users = new ArrayList<>();
+
+    private List<User> users = new ArrayList<>();
     private Random random;
 
     public UserGenerator(Random random) {
@@ -52,7 +52,7 @@ public class UserGenerator implements Generate {
         return users.get(random.nextInt(users.size()));
     }
 
-    public static List<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 }
