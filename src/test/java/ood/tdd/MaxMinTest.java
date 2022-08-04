@@ -15,14 +15,16 @@ public class MaxMinTest {
     public void when5isMax() {
         Comparator<Integer> comparator = Comparator.naturalOrder();
         List<Integer> value = List.of(1, 4, 2, 5, 0);
-        Assert.assertEquals(MaxMin.max(value, comparator), (Integer) 5);
+        int rsl = MaxMin.max(value, comparator);
+        Assert.assertEquals(rsl, 5);
     }
 
     @Test
     public void when2isMin() {
         Comparator<Integer> comparator = Comparator.naturalOrder();
         List<Integer> value = List.of(8, 4, 2, 5, 55);
-        Assert.assertEquals(MaxMin.min(value, comparator), (Integer) 2);
+        int rsl = MaxMin.min(value, comparator);
+        Assert.assertEquals(rsl, 2);
     }
 
     @Test
