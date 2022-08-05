@@ -27,7 +27,7 @@ public class Go {
                     new BubbleSort().sort(data);
                     System.out.println("BubbleSort");
                     break;
-                case 5:
+                default:
                     out = "out";
                     System.out.println("out");
                     break;

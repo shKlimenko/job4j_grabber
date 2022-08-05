@@ -1,4 +1,4 @@
-package ood.tdd;
+package ood.kiss;
 
 import org.junit.Assert;
 import org.junit.Test;

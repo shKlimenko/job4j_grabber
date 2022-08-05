@@ -1,4 +1,4 @@
-package ood.tdd;
+package ood.kiss;
 
 import java.util.Comparator;
 import java.util.List;
